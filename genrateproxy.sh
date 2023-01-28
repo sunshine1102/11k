@@ -42,7 +42,7 @@ cmd_ip="/sbin/ip"
 interface="$interface"
 network="$network"
 #gateway="2a01:4ff:1f0:c653::1"
-sleeptime="2s"
+sleeptime="1s"
 
 # -----
 # Generate Random Address
