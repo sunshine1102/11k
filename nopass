@@ -1,5 +1,14 @@
-#!/bin/sh
-yum install make
+#!/bin/bash
+
+#cemtos script 
+if [ -f /etc/centos-release ]; then
+
+
+systemctl stop firewalld 2>/dev/null
+rm  /usr/local/etc/3proxy/bin/3proxy 2>/dev/null
+rm -rf /home/proxy-installer 2>/dev/null
+rm -rf /usr/local/etc/3proxy/3proxy.cfg
+
 random() {
         tr </dev/urandom -dc A-Za-z0-9 | head -c5
         echo
@@ -14,22 +23,26 @@ gen64() {
 }
 install_3proxy() {
     echo "installing 3proxy"
-    URL="https://raw.githubusercontent.com/quayvlog/quayvlog/main/3proxy-3proxy-0.8.6.tar.gz"
-    wget -qO- $URL | bsdtar -xvf-
+    curl -Lb  /tmp/gcokie "https://drive.google.com/uc?export=download&confirm=Uq6r&id=1xZj_U-JlC5oSIRJOmJemvz0JV3eQG03m" -o "SomeBigFile.tar.gz" && tar -xzvf SomeBigFile.tar.gz && rm SomeBigFile.tar.gz
+
     cd 3proxy-3proxy-0.8.6
+   echo "compiling proxy server..."
     make -f Makefile.Linux
     mkdir -p /usr/local/etc/3proxy/{bin,logs,stat}
     cp src/3proxy /usr/local/etc/3proxy/bin/
     cp ./scripts/rc.d/proxy.sh /etc/init.d/3proxy
     chmod +x /etc/init.d/3proxy
+
     chkconfig 3proxy on
+    
     cd $WORKDIR
+    echo "initialising proxy server.."
 }
 
 gen_3proxy() {
     cat <<EOF
 daemon
-maxconn 1000
+maxconn 4000
 nscache 65536
 timeouts 1 5 30 60 180 1800 15 60
 setgid 65535
@@ -37,10 +50,8 @@ setuid 65535
 flush
 auth none
 
-users $(awk -F "/" 'BEGIN{ORS="";} {print $1 ":CL:" $2 " "}' ${WORKDATA})
 
 $(awk -F "/" '{print "auth none\n" \
-"allow " $1 "\n" \
 "proxy -6 -n -a -p" $4 " -i" $3 " -e"$5"\n" \
 "flush\n"}' ${WORKDATA})
 EOF
@@ -80,25 +91,31 @@ $(awk -F "/" '{print "ifconfig eth0 inet6 add " $5 "/64"}' ${WORKDATA})
 EOF
 }
 echo "installing apps"
-yum -y install gcc net-tools bsdtar zip >/dev/null
+yum -y install gcc net-tools make tar zip 2>/dev/null
 
 install_3proxy
 
 echo "working folder = /home/proxy-installer"
+
+echo ""
 WORKDIR="/home/proxy-installer"
 WORKDATA="${WORKDIR}/data.txt"
 mkdir $WORKDIR && cd $_
 
 IP4=$(curl -4 -s icanhazip.com)
-IP6=$(curl -6 -s icanhazip.com | cut -f1-4 -d':')
+
+echo "Enter ipv6 network address for eg: 2600:3c00:f03c:4dfd"
+read IP6
+#IP6=$(curl -6 -s icanhazip.com | cut -f1-4 -d':')
 
 echo "Internal ip = ${IP4}. Exteranl sub for ip6 = ${IP6}"
 
-echo "How many proxy do you want to create? Example 500"
-read COUNT
-
-FIRST_PORT=11000
-LAST_PORT=$(($FIRST_PORT + $COUNT))
+echo "Starting Port"
+read start_port
+echo "Ending Port"
+read end_port
+FIRST_PORT=$start_port
+LAST_PORT=$end_port
 
 gen_data >$WORKDIR/data.txt
 gen_iptables >$WORKDIR/boot_iptables.sh
@@ -119,3 +136,19 @@ bash /etc/rc.local
 gen_proxy_file_for_user
 
 upload_proxy
+
+fi
+
+
+
+
+
+#ubuntu script
+if [ -f /etc/lsb-release ]; then
+  apt update
+  apt-get install make -y
+  apt-get install gcc -y
+fi
+
+
+
