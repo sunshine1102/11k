@@ -3,12 +3,12 @@
 #cemtos script 
 if [ -f /etc/centos-release ]; then
 
-#!/bin/sh
+
 systemctl stop firewalld 2>/dev/null
 rm  /usr/local/etc/3proxy/bin/3proxy 2>/dev/null
 rm -rf /home/proxy-installer 2>/dev/null
 rm -rf /usr/local/etc/3proxy/3proxy.cfg
-
+#!/bin/sh
 random() {
 	tr </dev/urandom -dc A-Za-z0-9 | head -c5
 	echo
