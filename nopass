@@ -1,6 +1,5 @@
 #!/bin/bash
 
-#cemtos script 
 
 mkdir -p /tmp/ztmp && cd /tmp/ztmp
 #!/bin/sh
