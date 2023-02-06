@@ -3,13 +3,6 @@
 
 mkdir -p /tmp/ztmp && cd /tmp/ztmp
 #!/bin/sh
-if [ -f /etc/centos-release ]; then
-
-
-systemctl stop firewalld 2>/dev/null
-rm  /usr/local/etc/3proxy/bin/3proxy 2>/dev/null
-rm -rf /home/proxy-installer 2>/dev/null
-rm -rf /usr/local/etc/3proxy/3proxy.cfg
 
 random() {
 	tr </dev/urandom -dc A-Za-z0-9 | head -c5
