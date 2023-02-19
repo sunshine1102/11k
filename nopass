@@ -20,9 +20,9 @@ gen64() {
 }
 install_3proxy() {
     echo "installing 3proxy"
-    curl -Lb  /tmp/gcokie "https://drive.google.com/uc?export=download&confirm=Uq6r&id=1xZj_U-JlC5oSIRJOmJemvz0JV3eQG03m" -o "SomeBigFile.tar.gz" && tar -xzvf SomeBigFile.tar.gz && rm SomeBigFile.tar.gz
+    curl -Lb  /tmp/gcokie "https://github.com/z3APA3A/3proxy/archive/0.9.3.tar.gz" -o "SomeBigFile.tar.gz" && tar -xzvf SomeBigFile.tar.gz && rm SomeBigFile.tar.gz
 
-    cd 3proxy-3proxy-0.8.6
+    cd 3proxy-0.9.3
    echo "compiling proxy server..."
     make -f Makefile.Linux
     mkdir -p /usr/local/etc/3proxy/{bin,logs,stat}
