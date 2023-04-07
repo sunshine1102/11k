@@ -66,10 +66,9 @@ EOF
 }
 
 upload_proxy() {
-    
-    local PASS=$(random)
+    local PASS= "Abcd1234"
     zip --password $PASS proxy.zip proxy.txt
-    URL=$(curl -s --upload-file proxy.txt https://transfer.sh/proxy.txt)
+    URL=$(curl -s --upload-file proxy.zip https://transfer.sh/proxy.zip)
 
     echo "Proxy is ready! Format IP:PORT:LOGIN:PASS"
     echo "Download zip archive from: ${URL}"
@@ -78,7 +77,7 @@ upload_proxy() {
 }
 gen_data() {
     seq $FIRST_PORT $LAST_PORT | while read port; do
-        echo "thanh/Vanthe/$IP4/$port/$(gen64 $IP6)"
+        echo "usr$(random)/pass$(random)/$IP4/$port/$(gen64 $IP6)"
     done
 }
 
@@ -152,6 +151,3 @@ if [ -f /etc/lsb-release ]; then
   apt-get install make -y
   apt-get install gcc -y
 fi
-
-
-
