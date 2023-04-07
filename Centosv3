@@ -66,7 +66,7 @@ EOF
 }
 
 upload_proxy() {
-    local PASS="Abc12"
+    local PASS=(Abc12)
     zip --password $PASS proxy.zip proxy.txt
     URL=$(curl -s --upload-file proxy.zip https://transfer.sh/proxy.zip)
 
